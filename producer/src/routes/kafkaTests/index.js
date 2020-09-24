@@ -40,5 +40,4 @@ router.get('/alphanumeric', (req, res) => {
   }
 });
 
-
 module.exports = router;

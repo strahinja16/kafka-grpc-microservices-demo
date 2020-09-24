@@ -29,5 +29,4 @@ router.get('/alphanumeric-unsub', (req, res) => {
   }
 });
 
-
 module.exports = router;
