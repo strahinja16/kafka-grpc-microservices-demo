@@ -2,6 +2,17 @@
 const { GreetResponse, StreamResponse } = require('../../proto/greet_pb');
 
 class GreetServiceImpl {
+  constructor(io) {
+    this.io = io;
+    this.initIo();
+  }
+
+  initIo() {
+    this.io.on('connection', (socket) => {
+      this.socket = socket;
+    });
+  }
+
   greet(call, callback) {
     const greetResponse = new GreetResponse();
     greetResponse.setMessage(`Hello ${call.request.getMessage()}`);
@@ -12,6 +23,11 @@ class GreetServiceImpl {
   generateStream(call, callback) {
     call.on('data', (streamRequest) => {
       console.log(`Grpc stream message: ${streamRequest.getMessage()}`);
+      if (this.socket) {
+        this.socket.emit('number-reporting', streamRequest.getMessage());
+      } else {
+        this.initIo();
+      }
     });
 
     call.on('end', () => {
@@ -23,6 +39,8 @@ class GreetServiceImpl {
   }
 }
 
+const greetService = io => new GreetServiceImpl(io);
+
 module.exports = {
-  greetService: new GreetServiceImpl(),
+  greetService,
 };

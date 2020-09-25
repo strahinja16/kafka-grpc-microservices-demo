@@ -3,9 +3,8 @@
 /**
  * Module dependencies.
  */
-const http = require('http');
-const { port: configPort } = require('../config')
-const app = require('../');
+const { port: configPort } = require('../config');
+const { app, server } = require('../');
 
 /**
  * Normalize a port into a number, string, or false.
@@ -33,12 +32,6 @@ function normalizePort(val) {
 
 const port = normalizePort(configPort);
 app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-
-const server = http.createServer(app);
 
 /**
  * Event listener for HTTP server "error" event.

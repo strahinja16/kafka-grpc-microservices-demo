@@ -1,9 +1,16 @@
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { startGrpc } = require('./services/grpc/server');
+const { socketInit } = require('./services/socketio');
 
 const app = express();
+
+const server = http.createServer(app);
+const io = socketIo(server);
+socketInit(io);
 
 /**
  * Init middleware
@@ -20,11 +27,9 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-app.use('/api', require('./routes'));
-startGrpc();
 
-/**
- * Exports express
- * @public
- */
-module.exports = app;
+app.use('/api', require('./routes'));
+
+startGrpc(io);
+
+module.exports = { app, server };
