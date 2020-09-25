@@ -10,16 +10,13 @@ class GreetServiceImpl {
   }
 
   generateStream(call, callback) {
-    const processedMessages = [];
-
     call.on('data', (streamRequest) => {
       console.log(`Grpc stream message: ${streamRequest.getMessage()}`);
-      processedMessages.push(streamRequest.getMessage());
     });
 
     call.on('end', () => {
       const streamResponse = new StreamResponse();
-      streamResponse.setMessage(`Processed messages: ${processedMessages.join(', ')}`);
+      streamResponse.setMessage('Processed');
 
       callback(null, streamResponse);
     });

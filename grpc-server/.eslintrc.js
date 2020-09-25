@@ -11,6 +11,8 @@ module.exports = {
     "prefer-destructuring": "warn",
     "no-plusplus": "off",
     "no-console": "off",
+    "no-mixed-spaces-and-tabs": "off",
+    "no-tabs": "off",
   },
   "env": {
     "node": true,

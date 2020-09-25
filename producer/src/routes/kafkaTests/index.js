@@ -9,7 +9,7 @@ router.get('/numeric', (req, res) => {
     const number = Math.floor((Math.random() * 100) + 50);
 
     producer.send(
-      [{ topic: 'number', messages: [number, number + 1] }],
+      [{ topic: 'number', messages: number }],
       (error, data) => {
         if (error) console.log('Kafka producer callback error', { error });
         if (data) console.log('Kafka producer callback data', { data });

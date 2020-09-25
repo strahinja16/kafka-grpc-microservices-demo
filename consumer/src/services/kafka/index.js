@@ -1,4 +1,5 @@
 const { Consumer, KafkaClient, Offset } = require('kafka-node');
+const { processTopicData } = require('./processing');
 const { kafkaConfig } = require('../../config');
 
 const { initialTopics, host } = kafkaConfig;
@@ -25,6 +26,7 @@ const addInitialTopics = (offset, consumer) => {
         console.log('Consumer addInitialTopics added: ', { added });
 
         setTopicOffsets(offset, consumer, added);
+        processTopicData(consumer, added);
 
         initialTopicsInitialized = initialTopicsInitialized.concat(added);
 
@@ -42,16 +44,6 @@ try {
   const offset = new Offset(client);
 
   addInitialTopics(offset, consumer);
-
-  consumer.on('message', (message) => {
-    console.log('Consumer on message: ', { message });
-    // consumer.commit((err, data) => {
-    //   if (err) console.log('Consumer on commit err: ', { err });
-    //   if (data) console.log('Consumer on commit data: ', { data });
-    // });
-  });
-
-  consumer.on('error', err => console.log(`Consumer on error: ${err}`));
 
   consumer.on('offsetOutOfRange', (err) => {
     console.log('Consumer on offsetOutOfRange:', { err: err.topic });
