@@ -26,6 +26,28 @@ function deserialize_GreetResponse(buffer_arg) {
   return greet_pb.GreetResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_StreamRequest(arg) {
+  if (!(arg instanceof greet_pb.StreamRequest)) {
+    throw new Error('Expected argument of type StreamRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_StreamRequest(buffer_arg) {
+  return greet_pb.StreamRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_StreamResponse(arg) {
+  if (!(arg instanceof greet_pb.StreamResponse)) {
+    throw new Error('Expected argument of type StreamResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_StreamResponse(buffer_arg) {
+  return greet_pb.StreamResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 
 var GreetService = exports.GreetService = {
   greet: {
@@ -38,6 +60,17 @@ var GreetService = exports.GreetService = {
     requestDeserialize: deserialize_GreetRequest,
     responseSerialize: serialize_GreetResponse,
     responseDeserialize: deserialize_GreetResponse,
+  },
+  generateStream: {
+    path: '/Greet/generateStream',
+    requestStream: true,
+    responseStream: false,
+    requestType: greet_pb.StreamRequest,
+    responseType: greet_pb.StreamResponse,
+    requestSerialize: serialize_StreamRequest,
+    requestDeserialize: deserialize_StreamRequest,
+    responseSerialize: serialize_StreamResponse,
+    responseDeserialize: deserialize_StreamResponse,
   },
 };
 

@@ -1,6 +1,8 @@
 require('dotenv').config();
 
-const { PORT, KAFKA_HOST, KAFKA_INITIAL_TOPICS } = process.env;
+const {
+  PORT, KAFKA_HOST, KAFKA_INITIAL_TOPICS, GRPC_SERVER,
+} = process.env;
 
 const port = PORT || 3000;
 
@@ -14,4 +16,5 @@ module.exports = {
     host: KAFKA_HOST,
     initialTopics: kafkaInitialTopics,
   },
+  grpcServer: GRPC_SERVER,
 };

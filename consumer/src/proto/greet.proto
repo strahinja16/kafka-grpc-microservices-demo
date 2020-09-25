@@ -2,12 +2,21 @@ syntax = "proto3";
 
 service Greet {
   rpc greet(GreetRequest) returns (GreetResponse) {}
+  rpc generateStream (stream StreamRequest) returns (StreamResponse) {}
+}
+
+message GreetRequest {
+  string message = 1;
 }
 
 message GreetResponse {
   string message = 1;
 }
 
-message GreetRequest {
+message StreamRequest {
+  string message = 1;
+}
+
+message StreamResponse {
   string message = 1;
 }
