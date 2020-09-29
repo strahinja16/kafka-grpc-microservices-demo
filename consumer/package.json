@@ -25,6 +25,8 @@
     "grpc": "^1.24.3",
     "grpc-tools": "^1.9.1",
     "kafka-node": "^5.0.0",
+    "mongodb": "^3.6.2",
+    "mongoose": "^5.10.7",
     "nodemon": "^1.18.4"
   },
   "devDependencies": {

@@ -34,6 +34,16 @@ services:
       - producer
       - grpc-server
 
+  mongo:
+    image: mongo:4.4.1-bionic
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: reporting
+
   # Kafka
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6

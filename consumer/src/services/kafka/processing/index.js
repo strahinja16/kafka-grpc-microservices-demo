@@ -1,10 +1,10 @@
-const { processNumberTopic } = require('./numberProcessing');
+const { processUserActionsTopic } = require('./user');
 
 const processTopicData = (consumer, topics) => {
-  const numberTopic = 'number';
+  const userActionsTopic = 'user-actions';
 
-  if (topics.includes(numberTopic)) {
-    processNumberTopic(consumer);
+  if (topics.includes(userActionsTopic)) {
+    processUserActionsTopic(consumer);
   }
 };
 

@@ -4,8 +4,9 @@
  * Module dependencies.
  */
 const http = require('http');
-const { port: configPort } = require('../config')
+const { port: configPort } = require('../config');
 const app = require('../');
+const initKafkaJobs = require('../services/kafka/jobs');
 
 /**
  * Normalize a port into a number, string, or false.
@@ -86,5 +87,7 @@ function onListening() {
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+initKafkaJobs();
 
 module.exports = server;

@@ -3,11 +3,13 @@ const { processTopicData } = require('./processing');
 const { kafkaConfig } = require('../../config');
 
 const { initialTopics, host } = kafkaConfig;
-const consumerOptions = { autoCommit: true };
+const consumerOptions = {};
 let initialTopicsInitialized = [];
 
 const setTopicOffsets = (offset, consumer, topics) => {
   offset.fetchLatestOffsets(topics, (error, offsets) => {
+    if (error) console.log('Consumer setTopicOffsets err: ', { error });
+
     topics.forEach((topic) => {
       const latestOffset = offsets[topic][0];
       const partition = 0;
