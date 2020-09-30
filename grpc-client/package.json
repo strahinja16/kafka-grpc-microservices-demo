@@ -1,13 +1,13 @@
 {
-  "name": "kafka-demo-producer",
+  "name": "grpc-client",
   "version": "0.0.1",
   "engines": {
     "node": ">=10.0"
   },
-  "description": "kafka demo producer",
-  "main": "src/app.js",
+  "description": "grpc client",
+  "main": "src/index.js",
   "scripts": {
-    "start": "nodemon src/app.js -L"
+    "start": "nodemon ./src/bin/www -L"
   },
   "repository": {
     "type": "git",
@@ -16,13 +16,15 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^6.0.0",
-    "nodemon": "^2.0.4",
     "@grpc/grpc-js": "^1.1.7",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
     "google-protobuf": "^3.13.0",
     "grpc": "^1.24.3",
     "grpc-tools": "^1.9.1",
-    "socket.io": "^2.3.0"
+    "nodemon": "^1.18.4"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
