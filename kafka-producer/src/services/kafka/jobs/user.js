@@ -35,7 +35,7 @@ const userJob = () => {
     console.log(`Error in kafka ${topicUserSearch} job`, { error });
   }
 
-  repeatJob(userJob);
+  repeatJob(userJob, 50000);
 };
 
 module.exports = userJob;
