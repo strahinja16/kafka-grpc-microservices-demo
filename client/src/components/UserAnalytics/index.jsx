@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Message, Segment } from 'semantic-ui-react';
 import Loading from "../Loading";
-import AgeGroupReports from "../AgeGroupReports";
+import AgeGroupReports from "./AgeGroupAnalytics/AgeGroupReports";
+import CountryReports from "./CountryAnalytics/CountryReports";
 
 const UserAnalytics = () => {
 	const [loading, setLoading] = useState(false);
@@ -37,27 +38,26 @@ const UserAnalytics = () => {
 		}
 
 		const { ageGroupReports } = userAnalytics;
+		return <AgeGroupReports ageGroupReports={ageGroupReports} />
+	};
 
-		const ageGroups = [...new Set(ageGroupReports.map(report => report.ageGroup))];
+	const renderCountryReports = (userAnalytics) => {
+		if (!userAnalytics) {
+			return null;
+		}
 
-		return (
-			<Segment>
-				<h3>Age group reports</h3>
-				{ageGroups.map(ag => {
-					const groupReports = ageGroupReports.filter(report => report.ageGroup === ag);
-
-					return <AgeGroupReports ageGroup={ag} reports={groupReports} />
-				})}
-			</Segment>
-		)
+		const { countryReports } = userAnalytics;
+		return <CountryReports countryReports={countryReports} />
 	};
 
 	return loading
 		? <Loading />
 		: (
 			<Segment>
+				<h2>User analytics</h2>
 				{error && <Message negative content={error}/>}
 				{renderAgeGroupReports(userAnalytics)}
+				{renderCountryReports(userAnalytics)}
 			</Segment>
 		);
 }
