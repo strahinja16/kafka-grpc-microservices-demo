@@ -13,7 +13,7 @@ const CountryReports = ({ countryReports }) => {
 				{countries.map(country => {
 					const singleCountryReports = countryReports.filter(report => report.country === country);
 
-					return <CountryReport country={country} reports={singleCountryReports}/>
+					return <CountryReport key={country} country={country} reports={singleCountryReports}/>
 				})}
 			</div>
 		</Segment>

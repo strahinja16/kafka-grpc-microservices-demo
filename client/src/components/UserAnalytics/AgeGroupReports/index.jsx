@@ -13,7 +13,7 @@ const AgeGroupReports = ({ ageGroupReports }) => {
 				{ageGroups.map(ageGroup => {
 					const groupReports = ageGroupReports.filter(report => report.ageGroup === ageGroup);
 
-					return <AgeGroupReport ageGroup={ageGroup} reports={groupReports}/>
+					return <AgeGroupReport key={ageGroup} ageGroup={ageGroup} reports={groupReports}/>
 				})}
 			</div>
 		</Segment>

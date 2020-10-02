@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Message, Segment } from 'semantic-ui-react';
 import Loading from "../Loading";
-import AgeGroupReports from "./AgeGroupAnalytics/AgeGroupReports";
-import CountryReports from "./CountryAnalytics/CountryReports";
+import AgeGroupReports from "./AgeGroupReports";
+import CountryReports from "./CountryReports";
 
 const UserAnalytics = () => {
 	const [loading, setLoading] = useState(false);
@@ -14,22 +14,20 @@ const UserAnalytics = () => {
 		setTimeout(() => setError(''), 3000);
 	}
 
-	const fetchUserAnalytics = async () => {
-		try {
-			setLoading(true);
-			const userResults = await fetch('http://localhost:3001/api/kafka-reporting');
-			const userAnalytics = await userResults.json();
-
-			setUserAnalytics(userAnalytics);
-			setLoading(false);
-		} catch (err) {
-			setTemporaryError(err.message);
-			setLoading(false);
-		}
-	}
-
 	useEffect(() => {
-		fetchUserAnalytics();
+		(async () => {
+			try {
+				setLoading(true);
+				const userResults = await fetch('http://localhost:3001/api/kafka-reporting');
+				const userAnalytics = await userResults.json();
+
+				setUserAnalytics(userAnalytics);
+				setLoading(false);
+			} catch (err) {
+				setTemporaryError(err.message);
+				setLoading(false);
+			}
+		})();
 	}, []);
 
 	const renderAgeGroupReports = (userAnalytics) => {
