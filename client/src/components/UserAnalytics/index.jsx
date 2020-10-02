@@ -3,6 +3,7 @@ import { Message, Segment } from 'semantic-ui-react';
 import Loading from "../Loading";
 import AgeGroupReports from "./AgeGroupReports";
 import CountryReports from "./CountryReports";
+import socketIOClient from "socket.io-client";
 
 const UserAnalytics = () => {
 	const [loading, setLoading] = useState(false);
@@ -28,6 +29,9 @@ const UserAnalytics = () => {
 				setLoading(false);
 			}
 		})();
+
+		const socket = socketIOClient('http://localhost:3001');
+		socket.on("test", data => console.log(data));
 	}, []);
 
 	const renderAgeGroupReports = (userAnalytics) => {

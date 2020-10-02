@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-require('./services/kafka');
 require('./config');
 require('./models');
 require('./services/db')();

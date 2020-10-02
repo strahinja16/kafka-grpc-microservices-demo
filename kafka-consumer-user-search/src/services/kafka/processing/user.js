@@ -60,10 +60,12 @@ const storeCountryDataToMongo = async (userSearch) => {
   );
 };
 
-const processTopicUserSearch = (consumer) => {
+const processTopicUserSearch = (consumer, io) => {
   try {
     consumer.on('message', async ({ topic, value }) => {
       if (topic !== topicUserSearch) return;
+
+      io.emit('test', value);
 
       const userSearch = JSON.parse(value);
       await storeAgeDataToMongo(userSearch);
