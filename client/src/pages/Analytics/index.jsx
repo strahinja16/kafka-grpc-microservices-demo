@@ -6,7 +6,7 @@ import { UserAnalytics, NewsAnalytics } from "../../components";
 const Analytics = () => (
 	<Segment>
 		<UserAnalytics/>
-		<NewsAnalytics/>
+		{/*<NewsAnalytics/>*/}
 	</Segment>
 );
 

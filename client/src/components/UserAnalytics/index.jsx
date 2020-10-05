@@ -3,12 +3,12 @@ import { Message, Segment } from 'semantic-ui-react';
 import Loading from "../Loading";
 import AgeGroupReports from "./AgeGroupReports";
 import CountryReports from "./CountryReports";
-import socketIOClient from "socket.io-client";
 
 const UserAnalytics = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
-	const [userAnalytics, setUserAnalytics] = useState(null);
+	const [ageGroupReports, setAgeGroupReports] = useState(null);
+	const [countryReports, setCountryReports] = useState(null);
 
 	const setTemporaryError = (err) => {
 		setError(err);
@@ -20,36 +20,33 @@ const UserAnalytics = () => {
 			try {
 				setLoading(true);
 				const userResults = await fetch('http://localhost:3001/api/kafka-reporting');
-				const userAnalytics = await userResults.json();
+				const { ageGroupReports, countryReports } = await userResults.json();
 
-				setUserAnalytics(userAnalytics);
+				setAgeGroupReports(ageGroupReports);
+				setCountryReports(countryReports);
+
 				setLoading(false);
 			} catch (err) {
 				setTemporaryError(err.message);
 				setLoading(false);
 			}
 		})();
-
-		const socket = socketIOClient('http://localhost:3001');
-		socket.on("test", data => console.log(data));
 	}, []);
 
-	const renderAgeGroupReports = (userAnalytics) => {
-		if (!userAnalytics) {
+	const renderAgeGroupReports = (ageGroupReports) => {
+		if (!ageGroupReports) {
 			return null;
 		}
 
-		const { ageGroupReports } = userAnalytics;
-		return <AgeGroupReports ageGroupReports={ageGroupReports} />
+		return <AgeGroupReports ageGroupReports={ageGroupReports} setAgeGroupReports={setAgeGroupReports} />
 	};
 
-	const renderCountryReports = (userAnalytics) => {
-		if (!userAnalytics) {
+	const renderCountryReports = (countryReports) => {
+		if (!countryReports) {
 			return null;
 		}
 
-		const { countryReports } = userAnalytics;
-		return <CountryReports countryReports={countryReports} />
+		return <CountryReports countryReports={countryReports} setCountryReports={setCountryReports} />
 	};
 
 	return loading
@@ -58,8 +55,8 @@ const UserAnalytics = () => {
 			<Segment>
 				<h2>User analytics</h2>
 				{error && <Message negative content={error}/>}
-				{renderAgeGroupReports(userAnalytics)}
-				{renderCountryReports(userAnalytics)}
+				{renderCountryReports(countryReports)}
+				{renderAgeGroupReports(ageGroupReports)}
 			</Segment>
 		);
 }

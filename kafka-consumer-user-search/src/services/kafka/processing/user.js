@@ -4,7 +4,7 @@ const { getAgeGroupNameByAge } = require('./util');
 
 const { topicUserSearch } = kafkaConfig;
 
-const storeAgeDataToMongo = async (userSearch) => {
+const storeAgeDataToMongo = async (userSearch, io) => {
   const { category, user } = userSearch;
   const { age } = user;
 
@@ -19,10 +19,12 @@ const storeAgeDataToMongo = async (userSearch) => {
     });
 
     await newAgeGroupRecord.save();
+
+    io.emit('ageGroupReports', newAgeGroupRecord);
     return;
   }
 
-  await AgeGroup.update(
+  const updatableAgeGroup = await AgeGroup.findOneAndUpdate(
     {
       ageGroup,
       category,
@@ -30,10 +32,20 @@ const storeAgeDataToMongo = async (userSearch) => {
     {
       $inc: { searchCount: 1 },
     },
+    {
+      lean: true,
+    },
   );
+
+  const updatedAgeGroup = {
+    ...updatableAgeGroup,
+    searchCount: updatableAgeGroup.searchCount + 1,
+  };
+
+  io.emit('ageGroupReports', updatedAgeGroup);
 };
 
-const storeCountryDataToMongo = async (userSearch) => {
+const storeCountryDataToMongo = async (userSearch, io) => {
   const { category, user } = userSearch;
   const { country } = user;
 
@@ -46,10 +58,12 @@ const storeCountryDataToMongo = async (userSearch) => {
     });
 
     await newCountryRecord.save();
+
+    io.emit('countryReports', newCountryRecord);
     return;
   }
-
-  await Country.update(
+  
+  const updatableCountryRecord = await Country.findOneAndUpdate(
     {
       country,
       category,
@@ -57,7 +71,17 @@ const storeCountryDataToMongo = async (userSearch) => {
     {
       $inc: { searchCount: 1 },
     },
+    {
+      lean: true,
+    },
   );
+  
+  const updatedCountryRecord = {
+    ...updatableCountryRecord,
+    searchCount: updatableCountryRecord.searchCount + 1,
+  };
+  
+  io.emit('countryReports', updatedCountryRecord);
 };
 
 const processTopicUserSearch = (consumer, io) => {
@@ -65,11 +89,10 @@ const processTopicUserSearch = (consumer, io) => {
     consumer.on('message', async ({ topic, value }) => {
       if (topic !== topicUserSearch) return;
 
-      io.emit('test', value);
-
       const userSearch = JSON.parse(value);
-      await storeAgeDataToMongo(userSearch);
-      await storeCountryDataToMongo(userSearch);
+
+      await storeAgeDataToMongo(userSearch, io);
+      await storeCountryDataToMongo(userSearch, io);
     });
 
     consumer.on('error', err => console.log(`${topicUserSearch} processing on error: ${err.message}`));

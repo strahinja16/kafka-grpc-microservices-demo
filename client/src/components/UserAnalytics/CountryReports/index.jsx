@@ -1,10 +1,38 @@
-import React from 'react';
-import {Segment} from "semantic-ui-react";
+import React, { useEffect, useRef } from 'react';
+import { Segment } from "semantic-ui-react";
 import CountryReport from "../CountryReport";
+import socketIOClient from "socket.io-client";
 import './style.scss';
 
-const CountryReports = ({ countryReports }) => {
+const CountryReports = ({ countryReports, setCountryReports }) => {
 	const countries = [...new Set(countryReports.map(report => report.country))];
+	const socketRef = useRef(null);
+
+	useEffect(() => {
+		socketRef.current = socketIOClient('http://localhost:3001');
+		return () => {
+			if (socketRef.current) {
+				socketRef.current.disconnect();
+				socketRef.current = null;
+			}
+		}
+	})
+
+	useEffect(() => {
+		if (!socketRef.current) {
+			return;
+		}
+
+		socketRef.current.on("countryReports", countryReportsUpdate => {
+			const updatedReports = [...countryReports.map(report => {
+				return report._id === countryReportsUpdate._id
+					? {...countryReportsUpdate}
+					: report;
+			})]
+
+			setCountryReports(updatedReports)
+		});
+	});
 
 	return (
 		<Segment>

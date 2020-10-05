@@ -44,8 +44,6 @@ const addInitialTopics = (offset, consumer, io) => {
 
 const initKafka = (io) => {
   try {
-    io.on('connection', () => console.log('Connected to io from Kafka service'));
-
     const client = new KafkaClient({ kafkaHost: host });
     const consumer = new Consumer(client, [], consumerOptions);
     const offset = new Offset(client);
