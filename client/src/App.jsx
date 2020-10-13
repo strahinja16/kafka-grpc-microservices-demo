@@ -1,10 +1,12 @@
 import React from 'react';
-import { Analytics } from "./pages";
+import Routes from "./routes";
+import Header from "./components/Header";
 
 const App = () => {
   return (
     <main>
-      <Analytics/>
+      <Header />
+      <Routes />
     </main>
   );
 }
