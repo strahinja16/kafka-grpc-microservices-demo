@@ -9,7 +9,7 @@ const AgeGroupReports = ({ ageGroupReports, setAgeGroupReports }) => {
 	const socketRef = useRef(null);
 
 	useEffect(() => {
-		socketRef.current = socketIOClient('http://localhost:3001');
+		socketRef.current = socketIOClient(process.env.REACT_APP_SOCKET_ENDPOINT);
 		return () => {
 			if (socketRef.current) {
 				socketRef.current.disconnect();

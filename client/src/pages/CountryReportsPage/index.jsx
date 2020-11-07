@@ -17,7 +17,7 @@ const CountryReportsPage = () => {
 		(async () => {
 			try {
 				setLoading(true);
-				const userResults = await fetch('http://localhost:3001/api/kafka-reporting');
+				const userResults = await fetch(`${process.env.REACT_APP_USER_SERVICE}/api/kafka-reporting`);
 				const { countryReports } = await userResults.json();
 
 				setCountryReports(countryReports);

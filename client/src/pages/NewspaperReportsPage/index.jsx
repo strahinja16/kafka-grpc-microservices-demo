@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Message } from 'semantic-ui-react';
-import AgeGroupReports from "../../components/UserAnalytics/AgeGroupReports";
 import Loading from "../../components/Loading";
+import NewspaperReports from "../../components/NewsAnalytics/NewspaperReports";
 
-const AgeGroupReportsPage = () => {
+const NewspaperReportsPage = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
-	const [ageGroupReports, setAgeGroupReports] = useState(null);
+	const [newspaperReports, setNewspaperReports] = useState(null);
 
 	const setTemporaryError = (err) => {
 		setError(err);
@@ -17,10 +17,10 @@ const AgeGroupReportsPage = () => {
 		(async () => {
 			try {
 				setLoading(true);
-				const userResults = await fetch(`${process.env.REACT_APP_USER_SERVICE}/api/kafka-reporting`);
-				const { ageGroupReports } = await userResults.json();
+				const newsAnalytics = await fetch(`${process.env.REACT_APP_NEWS_SERVICE}/api/kafka-reporting`);
+				const { newspaperArticleCountByCategoryReports } = await newsAnalytics.json();
 
-				setAgeGroupReports(ageGroupReports);
+				setNewspaperReports(newspaperArticleCountByCategoryReports);
 
 				setLoading(false);
 			} catch (err) {
@@ -30,12 +30,12 @@ const AgeGroupReportsPage = () => {
 		})();
 	}, []);
 
-	const renderAgeGroupReports = (ageGroupReports) => {
-		if (!ageGroupReports) {
+	const renderNewspaperReports = (newspaperReports) => {
+		if (!newspaperReports) {
 			return null;
 		}
 
-		return <AgeGroupReports ageGroupReports={ageGroupReports} setAgeGroupReports={setAgeGroupReports} />
+		return <NewspaperReports newspaperReports={newspaperReports} />
 	};
 
 	return loading
@@ -43,9 +43,9 @@ const AgeGroupReportsPage = () => {
 		: (
 			<section>
 				{error && <Message negative content={error}/>}
-				{renderAgeGroupReports(ageGroupReports)}
+				{renderNewspaperReports(newspaperReports)}
 			</section>
 		);
 }
 
-export default AgeGroupReportsPage;
+export default NewspaperReportsPage;

@@ -19,7 +19,7 @@ const NewsAnalytics = () => {
 		(async () => {
 			try {
 				setLoading(true);
-				const newsResults = await fetch('http://localhost:3002/api/kafka-reporting');
+				const newsResults = await fetch(`${process.env.REACT_APP_NEWS_SERVICE}/api/kafka-reporting`);
 				const newsAnalytics = await newsResults.json();
 
 				setNewsAnalytics(newsAnalytics);
