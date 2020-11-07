@@ -28,11 +28,6 @@ const ArticleCountByCategoryReportsPage = () => {
 			return;
 		}
 
-		// socketRef.current.on("globalReports", globalReportsUpdate => {
-		// 	const updatedGlobalReports = [globalReportsUpdate];
-		// 	setGlobalReports(updatedGlobalReports);
-		// });
-
 		socketRef.current.on("articleCountByCategoryReports", articleCountByCategoryUpdate => {
 			const updatedArticleCountByCategoryReports = articleCountByCategoryReports.map(rep => {
 				return rep._id === articleCountByCategoryUpdate._id ? articleCountByCategoryUpdate : rep;
