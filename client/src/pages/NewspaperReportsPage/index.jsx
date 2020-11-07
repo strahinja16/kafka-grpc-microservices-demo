@@ -1,12 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { Message } from 'semantic-ui-react';
 import Loading from "../../components/Loading";
 import NewspaperReports from "../../components/NewsAnalytics/NewspaperReports";
+import socketIOClient from "socket.io-client";
 
 const NewspaperReportsPage = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const [newspaperReports, setNewspaperReports] = useState(null);
+
+	const socketRef = useRef(null);
+
+	useEffect(() => {
+		socketRef.current = socketIOClient(process.env.REACT_APP_NEWS_SERVICE);
+		return () => {
+			if (socketRef.current) {
+				socketRef.current.disconnect();
+				socketRef.current = null;
+			}
+		}
+	})
+
+	useEffect(() => {
+		if (!socketRef.current) {
+			return;
+		}
+
+		socketRef.current.on("newspaperArticleCountByCategoryReports", newspaperReportsUpdate => {
+			const updatedNewspaperReports = newspaperReports.map(rep => {
+				return rep._id === newspaperReportsUpdate._id ? newspaperReportsUpdate : rep;
+			});
+			setNewspaperReports(updatedNewspaperReports);
+		});
+	});
 
 	const setTemporaryError = (err) => {
 		setError(err);

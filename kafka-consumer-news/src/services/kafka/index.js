@@ -22,7 +22,7 @@ const setTopicOffsets = (offset, consumer, topics) => {
   });
 };
 
-const addInitialTopics = (offset, consumer) => {
+const addInitialTopics = (offset, consumer, io) => {
   const addTopicsInterval = setInterval(() => {
     consumer.addTopics(initialTopics, (err, added) => {
       if (err) console.log('Consumer addInitialTopics err: ', { err: err.topics });
@@ -30,7 +30,7 @@ const addInitialTopics = (offset, consumer) => {
         console.log('Consumer addInitialTopics added: ', { added });
 
         setTopicOffsets(offset, consumer, added);
-        processTopicData(consumer, added);
+        processTopicData(consumer, added, io);
 
         initialTopicsInitialized = initialTopicsInitialized.concat(added);
 
@@ -42,19 +42,25 @@ const addInitialTopics = (offset, consumer) => {
   }, 3000);
 };
 
-try {
-  const client = new KafkaClient({ kafkaHost: host });
-  const consumer = new Consumer(client, [], consumerOptions);
-  const offset = new Offset(client);
+const initKafka = (io) => {
+  try {
+    const client = new KafkaClient({ kafkaHost: host });
+    const consumer = new Consumer(client, [], consumerOptions);
+    const offset = new Offset(client);
 
-  addInitialTopics(offset, consumer);
+    addInitialTopics(offset, consumer, io);
 
-  consumer.on('offsetOutOfRange', (err) => {
-    console.log('Consumer on offsetOutOfRange:', { err: err.topic });
-    setTopicOffsets(offset, consumer, [err.topic]);
-  });
+    consumer.on('offsetOutOfRange', (err) => {
+      console.log('Consumer on offsetOutOfRange:', { err: err.topic });
+      setTopicOffsets(offset, consumer, [err.topic]);
+    });
 
-  module.exports = { consumer };
-} catch (err) {
-  console.log(`Kafka consumer service error: ${err}`);
-}
+    module.exports = { consumer };
+  } catch (err) {
+    console.log(`Kafka consumer service error: ${err}`);
+  }
+};
+
+module.exports = {
+  initKafka,
+};

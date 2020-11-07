@@ -7,8 +7,8 @@ const {
 
 const { topicNews } = kafkaConfig;
 
-const storeGlobalMetricsToMongo = async () => {
-  await GlobalNewsMetrics.findOneAndUpdate(
+const storeGlobalMetricsToMongo = async (io) => {
+  const updatableGlobalMetrics = await GlobalNewsMetrics.findOneAndUpdate(
     {
       id: 1,
     },
@@ -18,14 +18,22 @@ const storeGlobalMetricsToMongo = async () => {
     {
       upsert: true,
       new: true,
+      lean: true,
     },
   );
+
+  const updatedGlobalMetrics = {
+    ...updatableGlobalMetrics,
+    articlesCount: updatableGlobalMetrics.articlesCount + 1,
+  };
+
+  io.emit('globalReports', updatedGlobalMetrics);
 };
 
-const storeNewspaperDataToMongo = async (news) => {
+const storeNewspaperDataToMongo = async (news, io) => {
   const { newspaper, category } = news;
 
-  await ArticleCountByCategory.findOneAndUpdate(
+  const updatableArticleCountByCategory = await ArticleCountByCategory.findOneAndUpdate(
     {
       category,
     },
@@ -35,10 +43,17 @@ const storeNewspaperDataToMongo = async (news) => {
     {
       upsert: true,
       new: true,
+      lean: true,
     },
   );
+  const updatedArticleCountByCategory = {
+    ...updatableArticleCountByCategory,
+    articlesCount: updatableArticleCountByCategory.articlesCount + 1,
+  };
+  io.emit('articleCountByCategoryReports', updatedArticleCountByCategory);
 
-  await NewspaperArticleCountByCategory.findOneAndUpdate(
+
+  const updatableNewspaperArticleCount = await NewspaperArticleCountByCategory.findOneAndUpdate(
     {
       newspaper,
       category,
@@ -49,18 +64,27 @@ const storeNewspaperDataToMongo = async (news) => {
     {
       upsert: true,
       new: true,
+      lean: true,
     },
   );
+
+
+  const updatedNewspaperArticleCount = {
+    ...updatableNewspaperArticleCount,
+    articlesCount: updatableNewspaperArticleCount.articlesCount + 1,
+  };
+
+  io.emit('newspaperArticleCountByCategoryReports', updatedNewspaperArticleCount);
 };
 
-const processTopicNews = (consumer) => {
+const processTopicNews = (consumer, io) => {
   try {
     consumer.on('message', async ({ topic, value }) => {
       if (topic !== topicNews) return;
 
       const news = JSON.parse(value);
-      await storeGlobalMetricsToMongo(news);
-      await storeNewspaperDataToMongo(news);
+      await storeGlobalMetricsToMongo(io);
+      await storeNewspaperDataToMongo(news, io);
     });
 
     consumer.on('error', err => console.log(`${topicNews} processing on error: ${err.message}`));

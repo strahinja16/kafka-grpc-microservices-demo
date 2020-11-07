@@ -9,7 +9,7 @@ const CountryReports = ({ countryReports, setCountryReports }) => {
 	const socketRef = useRef(null);
 
 	useEffect(() => {
-		socketRef.current = socketIOClient(process.env.REACT_APP_SOCKET_ENDPOINT);
+		socketRef.current = socketIOClient(process.env.REACT_APP_USER_SERVICE);
 		return () => {
 			if (socketRef.current) {
 				socketRef.current.disconnect();
