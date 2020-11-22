@@ -13,7 +13,7 @@ try {
 
     if (initialTopics.length) {
       producer.createTopics(
-        [topicNews, topicUserSearch],
+        initialTopics,
         (error, data) => {
           if (error) console.log('Kafka kafka-producer create topics error', { error });
           if (data) console.log('Kafka kafka-producer create topics data', { data });

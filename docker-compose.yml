@@ -67,23 +67,3 @@ services:
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_HOST_NAME: kafka
-
-#  # gRPC
-#  grpc-server:
-#    build: grpc-server
-#    volumes:
-#      - ./grpc-server:/usr/src/app/
-#      - /usr/src/app/node_modules
-#    ports:
-#      - "3000:3000"
-#      - "50051:50051"
-#
-#  grpc-client:
-#    build: grpc-client
-#    volumes:
-#      - ./grpc-client:/usr/src/app/
-#      - /usr/src/app/node_modules
-#    ports:
-#      - "3001:3000"
-#    depends_on:
-#      - grpc-server
